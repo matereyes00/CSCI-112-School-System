@@ -10,6 +10,8 @@ import { Teacher } from "./collections/teachers/teacher.model";
 import { TeacherRepository } from "./collections/teachers/teacher.repository";
 import { Course } from "./collections/courses/course.model";
 import { CourseRepository } from "./collections/courses/course.repository";
+import { QPI } from "./collections/qpi/qpi.model";
+import { QPIRepository } from "./collections/qpi/qpi.repository";
 
 @Injectable()
 export class SchoolService {
@@ -18,7 +20,8 @@ export class SchoolService {
     private readonly studentRepository: StudentRepository,
     private readonly holdOrdersRepository: HoldOrdersRepository,
     private readonly teachersRepository: TeacherRepository,
-    private readonly courseRepository: CourseRepository
+    private readonly courseRepository: CourseRepository,
+    private readonly qpiRepository: QPIRepository
   ) {}
 
   public async InsertStudents() {
@@ -242,6 +245,73 @@ export class SchoolService {
       i++;
     }
     await this.courseRepository.createMany(arrayOfCourses);
+  }
+
+  public async InsertQPI() {
+    const studentsDB = await this.studentRepository.findAll();
+    const students: {
+      id: number;
+      studentYear: string;
+    }[] = [];
+    studentsDB.forEach(f => {
+      students.push(
+        {
+          id: f.studentID,
+          studentYear: f.studentYear
+        }
+      )
+    })
+    const allQPIs: QPI[] = [];
+
+    students.forEach(f => {
+        const qpisForStudent = this.GetQPIsForStudent(f);
+        allQPIs.push(...qpisForStudent);
+      }
+    )
+    await this.qpiRepository.createMany(allQPIs);
+  }
+
+  private GetQPIsForStudent(student: {id: number, studentYear: string}) {
+    const QPIsForStudent: QPI[] = [];
+    let years = 0;
+    switch (student.studentYear) {
+      case 'Freshman':
+        years = 1;
+        break;
+      case 'Sophomore':
+        years = 2;
+        break;
+      case 'Junior':
+        years = 3;
+        break;
+      case 'Senior':
+        years = 4;
+        break;
+    }
+    const semestersCompleted = years * 2;
+
+    for (let k = 0; k < semestersCompleted; k++) {
+      let studentYear = '';
+      const semester = (n: number) => {
+        return (n % 2) == 0 ? '1st Semester' : '2nd Semester';
+      }
+      if (k == 0) studentYear = 'Freshman';
+      if (k == 1) studentYear = 'Freshman';
+      if (k == 2) studentYear = 'Sophomore';
+      if (k == 3) studentYear = 'Sophomore';
+      if (k == 4) studentYear = 'Junior';
+      if (k == 5) studentYear = 'Junior';
+      if (k == 6) studentYear = 'Senior';
+      if (k == 7) studentYear = 'Senior';
+      const QPI: QPI = {
+        studentID: (student.id).toString(),
+        studentYear: studentYear,
+        QPI: (Math.random() * (4 - 1) + 1),
+        semester: semester(k)
+      }
+      QPIsForStudent.push(QPI)
+    }
+    return QPIsForStudent;
   }
 
   private ReturnCourseCode(course: string) : string {

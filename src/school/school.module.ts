@@ -8,6 +8,8 @@ import { HoldOrdersRepository } from "./collections/holdOrders/holdOrders.reposi
 import { HoldOrdersSchema } from "./collections/holdOrders/holdOrders.schema";
 import { ParentRepository } from "./collections/parents/parents.repository";
 import { ParentSchema } from "./collections/parents/parents.schema";
+import { QPIRepository } from "./collections/qpi/qpi.repository";
+import { QPISchema } from "./collections/qpi/qpi.schema";
 import { StudentRepository } from "./collections/student/student.repository";
 import { StudentSchema } from "./collections/student/student.schema";
 import { TeacherRepository } from "./collections/teachers/teacher.repository";
@@ -23,7 +25,8 @@ import { SchoolService } from "./school.service";
       { name: 'Student', schema: StudentSchema },
       { name: 'HoldOrders', schema: HoldOrdersSchema },
       { name: 'Teacher', schema: TeacherSchema },
-      { name: 'Course', schema: CourseSchema }
+      { name: 'Course', schema: CourseSchema },
+      { name: 'QPI', schema: QPISchema }
     ])
   ],
   controllers: [SchoolController],
@@ -34,6 +37,7 @@ import { SchoolService } from "./school.service";
     HoldOrdersRepository,
     TeacherRepository,
     CourseRepository,
+    QPIRepository,
     LoggerService
   ]
 })

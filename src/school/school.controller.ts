@@ -34,4 +34,8 @@ export class SchoolController {
     await this.schoolService.InsertCourses();
   }
 
+  @Post('/insert/qpi')
+  async InsertQPIs() {
+    await this.schoolService.InsertQPI();
+  }
 }
