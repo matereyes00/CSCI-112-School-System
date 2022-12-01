@@ -29,4 +29,9 @@ export class SchoolController {
     await this.schoolService.InsertTeachers();
   }
 
+  @Post('/insert/courses')
+  async InsertCourses() {
+    await this.schoolService.InsertCourses();
+  }
+
 }

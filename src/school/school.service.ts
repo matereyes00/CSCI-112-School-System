@@ -8,6 +8,8 @@ import { HoldOrders } from "./collections/holdOrders/holdOrders.model";
 import { HoldOrdersRepository } from "./collections/holdOrders/holdOrders.repository";
 import { Teacher } from "./collections/teachers/teacher.model";
 import { TeacherRepository } from "./collections/teachers/teacher.repository";
+import { Course } from "./collections/courses/course.model";
+import { CourseRepository } from "./collections/courses/course.repository";
 
 @Injectable()
 export class SchoolService {
@@ -15,7 +17,8 @@ export class SchoolService {
     private readonly parentRepository: ParentRepository,
     private readonly studentRepository: StudentRepository,
     private readonly holdOrdersRepository: HoldOrdersRepository,
-    private readonly teachersRepository: TeacherRepository
+    private readonly teachersRepository: TeacherRepository,
+    private readonly courseRepository: CourseRepository
   ) {}
 
   public async InsertStudents() {
@@ -191,7 +194,6 @@ export class SchoolService {
     const arrayOfTeachers: Teacher[] = [];
 
     while (i < length) {
-      console.log(i)
       const randomFirstName = getRandom(femAndMaleNames);
       const randomLastName = getRandom(lastNames);
 
@@ -211,6 +213,62 @@ export class SchoolService {
       i++;
     }
     await this.teachersRepository.createMany(arrayOfTeachers);
+  }
+
+  public async InsertCourses() {
+    const courses = ['Computer Science', 'Mathematics', 'Engineering', 'Physics', 'Accounting', 'Business Management', 'Architecture', 'Multimedia Arts', 'Communication Arts', 'Fashion Design', 'Chemical Engineering']
+    const booleans = [true, false];
+    const getRandom = (item: Array<string | boolean | number>) => {
+      return item[Math.floor(Math.random()*item.length)]
+    }
+    const randomNumber = (length: number) => {
+      return `${Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1))}`;
+    }
+    const length = courses.length;
+    let i = 0;
+
+    const arrayOfCourses: Course[] = [];
+
+    while (i < length) {
+      const courseCode = this.ReturnCourseCode(courses[i]);
+      const course: Course = {
+        courseCode: courseCode,
+        courseName: courses[i],
+        courseFee: +(randomNumber(5)),
+        unitsNeeded: Math.floor(Math.random() * (18 - 15) + 15),
+        isQuotaCourse: <boolean> getRandom(booleans)
+      }
+      arrayOfCourses.push(course);
+      i++;
+    }
+    await this.courseRepository.createMany(arrayOfCourses);
+  }
+
+  private ReturnCourseCode(course: string) : string {
+    switch (course) {
+      case 'Computer Science':
+        return 'CSCI';
+      case 'Mathematics':
+        return 'MATH';
+      case 'Engineering':
+        return 'ENG';
+      case 'Physics':
+        return 'PHYS';
+      case 'Accounting':
+        return 'ACCNT';
+      case 'Business Management':
+        return 'BUSMAN';
+      case 'Architecture':
+        return 'ARCHI';
+      case 'Multimedia Arts':
+        return 'MULTIART';
+      case 'Communication Arts':
+        return 'COMMART';
+      case 'Fashion Design':
+        return 'FASHDES';
+      case 'Chemical Engineering':
+        return 'CHEMENG'
+    }
   }
 
   private Headers() {
