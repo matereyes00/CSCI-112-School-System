@@ -16,6 +16,10 @@ export const ParentSchema = new mongoose.Schema(
       type: [String],
       required: true
     },
+    relationship: {
+      type: String,
+      required: true
+    },
     contactNumber: {
       type: String,
       required: true

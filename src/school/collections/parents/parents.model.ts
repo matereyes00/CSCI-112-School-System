@@ -3,8 +3,8 @@ import { BaseModel } from "src/shared/base.model";
 interface Parent {
   parentName: string;
   relationship: string;
-  studentID: string[];
-  contactNo: string;
+  studentID: number[];
+  contactNumber: string;
   email: string;
 }
 
