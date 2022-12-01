@@ -8,6 +8,8 @@ import { ParentRepository } from "./collections/parents/parents.repository";
 import { ParentSchema } from "./collections/parents/parents.schema";
 import { StudentRepository } from "./collections/student/student.repository";
 import { StudentSchema } from "./collections/student/student.schema";
+import { TeacherRepository } from "./collections/teachers/teacher.repository";
+import { TeacherSchema } from "./collections/teachers/teacher.schema";
 import { SchoolController } from "./school.controller";
 import { SchoolService } from "./school.service";
 
@@ -17,7 +19,8 @@ import { SchoolService } from "./school.service";
     MongooseModule.forFeature([
       { name: 'Parent', schema: ParentSchema },
       { name: 'Student', schema: StudentSchema },
-      { name: 'HoldOrders', schema: HoldOrdersSchema }
+      { name: 'HoldOrders', schema: HoldOrdersSchema },
+      { name: 'Teacher', schema: TeacherSchema }
     ])
   ],
   controllers: [SchoolController],
@@ -26,6 +29,7 @@ import { SchoolService } from "./school.service";
     ParentRepository,
     StudentRepository,
     HoldOrdersRepository,
+    TeacherRepository,
     LoggerService
   ]
 })

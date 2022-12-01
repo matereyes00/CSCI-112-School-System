@@ -6,13 +6,16 @@ import { StudentRepository } from "./collections/student/student.repository";
 import axios from 'axios';
 import { HoldOrders } from "./collections/holdOrders/holdOrders.model";
 import { HoldOrdersRepository } from "./collections/holdOrders/holdOrders.repository";
+import { Teacher } from "./collections/teachers/teacher.model";
+import { TeacherRepository } from "./collections/teachers/teacher.repository";
 
 @Injectable()
 export class SchoolService {
   constructor(
     private readonly parentRepository: ParentRepository,
     private readonly studentRepository: StudentRepository,
-    private readonly holdOrdersRepository: HoldOrdersRepository
+    private readonly holdOrdersRepository: HoldOrdersRepository,
+    private readonly teachersRepository: TeacherRepository
   ) {}
 
   public async InsertStudents() {
@@ -145,6 +148,69 @@ export class SchoolService {
       holdOrders.push(holdOrderDoc)
     })
     await this.holdOrdersRepository.createMany(holdOrders);
+  }
+
+  public async InsertTeachers() {
+    const getRandom = (item: Array<string | boolean | number>) => {
+      return item[Math.floor(Math.random()*item.length)]
+    }
+
+    const randomNumber = (length: number) => {
+      return `${getRandom(randomPrefixes)}${Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1))}`;
+    }
+
+    const randomCourses = () : string[] => {
+      const coursesTaught: string[] = []
+      const numberOfCourse = Math.floor(Math.random() * (10 - 1) + 1);
+      
+      for (let j = 0; j < numberOfCourse; j++) {
+        coursesTaught.push(<string> getRandom(courses));
+      }
+      return coursesTaught
+    }
+
+    const randomMonthsEmployed = () : number => {
+      return Math.floor(Math.random() * (60 - 1) + 1);
+    }
+
+    const femUrl = 'https://www.randomlists.com/data/names-female.json';
+    const maleUrl = 'https://www.randomlists.com/data/names-male.json';
+    const lastNameUrl = 'https://www.randomlists.com/data/names-surnames.json';
+    const departments = ['SOSE', 'SOSS', 'SOM'];
+    const randomPrefixes = ['0917', '0916', '0927', '0905', '0906', '0915', '0926'];
+    const courses = ['Computer Science', 'Mathematics', 'Engineering', 'Physics', 'Accounting', 'Business Management', 'Architecture', 'Multimedia Arts', 'Communication Arts', 'Fashion Design', 'Chemical Engineering']
+    const headers = this.Headers();
+    const femNames = <Array<string>> (await axios.get(femUrl, headers)).data.data;
+    const maleNames = <Array<string>> (await axios.get(maleUrl, headers)).data.data;
+    const lastNames = <Array<string>> (await axios.get(lastNameUrl, headers)).data.data;
+    const femAndMaleNames = femNames.concat(maleNames)
+
+    const length = 200;
+    let i = 1;
+
+    const arrayOfTeachers: Teacher[] = [];
+
+    while (i < length) {
+      console.log(i)
+      const randomFirstName = getRandom(femAndMaleNames);
+      const randomLastName = getRandom(lastNames);
+
+      const teacherName = `${randomFirstName} ${randomLastName}`;
+      const teacherEmail = `${randomFirstName}_${randomLastName}`
+
+      const teacher: Teacher = {
+        teacherID: i.toString(),
+        teacherName: teacherName,
+        schoolEmail: `${teacherEmail}@ateneo.edu`,
+        department: <string> getRandom(departments),
+        contactNumber: randomNumber(7),
+        coursesTaught: randomCourses(),
+        monthsEmployed: randomMonthsEmployed()
+      }
+      arrayOfTeachers.push(teacher);
+      i++;
+    }
+    await this.teachersRepository.createMany(arrayOfTeachers);
   }
 
   private Headers() {

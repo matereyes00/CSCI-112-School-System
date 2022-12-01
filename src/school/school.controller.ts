@@ -24,4 +24,9 @@ export class SchoolController {
     await this.schoolService.InsertHoldOrders();
   }
 
+  @Post('/insert/teachers')
+  async InsertTeachers() {
+    await this.schoolService.InsertTeachers();
+  }
+
 }
