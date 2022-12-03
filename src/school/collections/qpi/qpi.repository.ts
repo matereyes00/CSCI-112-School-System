@@ -15,4 +15,24 @@ export class QPIRepository extends BaseRepository<QPIMongoModel> {
     super(qpiModel, log);
   }
   
+  async QPIGreaterThan() {
+    const aggregate = await this.qpiModel.aggregate([
+      {
+        $match: {
+          $and: [
+            { studentYear: 'Sophomore' },
+            { semester: '2nd Semester' },
+            { QPI: { $gt: 3.3 } }
+          ]
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          __v: 0
+        }
+      }
+    ])
+    return aggregate;
+  }
 }

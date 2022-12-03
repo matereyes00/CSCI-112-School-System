@@ -77,4 +77,16 @@ export class SchoolController {
   async DepartmentWithMostStudents() {
     return this.queriesService.DepartmentWithMostStudents();
   }
+
+  // G
+  @Get('query/getSummas')
+  async QPIGreaterThan() {
+    return this.queriesService.QPIGreaterThan();
+  }
+
+  // F
+  @Get('query/getInfoOnTeachers')
+  async TeachersWithCourseInfo() {
+    return this.queriesService.TeachersWithCourseInfo()
+  }
 }

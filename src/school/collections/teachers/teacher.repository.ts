@@ -34,4 +34,79 @@ export class TeacherRepository extends BaseRepository<TeacherMongoModel> {
     ])
     return aggregate;
   }
+
+  public async TeacherWithCourseInfo() {
+    const aggregate = await this.teacherModel.aggregate([
+      {
+        $lookup: {
+          from: 'students',
+          as: 'totalStudents',
+          pipeline: [
+            {
+              $group: {
+                _id: "$courseName",
+                count: { $sum: 1 }
+              }
+            }
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: 'courses',
+          as: 'coursesTaughtInformation',
+          let: {
+            coursesTaught: '$coursesTaught',
+            totalStudents: '$totalStudents'
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: ['$courseName', '$$coursesTaught']
+                }
+              }
+            },
+            {
+              $addFields: {
+                totalStudent: {
+                  $filter: {
+                    input: '$$totalStudents',
+                    as: "students",
+                    cond: {
+                      $eq: ['$$students._id', '$courseName']
+                    }
+                  }
+                }
+              }
+            },
+            {
+              $unwind: '$totalStudent'
+            },
+            {
+              $addFields: {
+                studentsInCourse: '$totalStudent.count'
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                __v: 0,
+                totalStudent: 0
+              }
+            }
+          ]
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          __v: 0,
+          // uncomment if want to show in DEMO
+          totalStudents: 0
+        }
+      }
+    ])
+    return aggregate;
+  }
 }

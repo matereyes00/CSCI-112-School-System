@@ -43,7 +43,18 @@ export class QueriesService {
     return this.teachersRepository.TeachingOverAYearByDepartment(department);
   }
 
+  // F
   public DepartmentWithMostStudents() {
     return this.studentRepository.DepartmentWithMostStudents();
+  }
+
+  // G
+  public QPIGreaterThan() {
+    return this.qpiRepository.QPIGreaterThan();
+  }
+
+  // H
+  public TeachersWithCourseInfo() {
+    return this.teachersRepository.TeacherWithCourseInfo();
   }
 }
