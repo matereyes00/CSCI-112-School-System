@@ -24,10 +24,6 @@ export class QueriesService {
     private readonly qpiRepository: QPIRepository
   ) {}
 
-  public GetAverageQPIByDepartment(department: string) {
-    console.log('working')
-  }
-
   // C
   public NumberOfStudentsWithHoldOrder() {
     return this.studentRepository.StudentsWithHoldOrder();

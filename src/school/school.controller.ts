@@ -47,12 +47,18 @@ export class SchoolController {
     await this.schoolService.InsertGuardians();
   }
 
-  // ALL QUERIES START HERE
-  // A
-  @Get('query/averageQPI/:department')
-  async GetAverageQPIByDepartment(@Param('department') department: string) {
-    this.queriesService.GetAverageQPIByDepartment(department)
+  @Post('insert/all') 
+  async InsertAll() {
+    await this.schoolService.InsertStudents();
+    await this.schoolService.InsertParents();
+    await this.schoolService.InsertHoldOrders();
+    await this.schoolService.InsertTeachers();
+    await this.schoolService.InsertCourses();
+    await this.schoolService.InsertQPI();
+    await this.schoolService.InsertGuardians();
   }
+
+  // ALL QUERIES START HERE
 
   // C
   @Get('query/holdOrder')
