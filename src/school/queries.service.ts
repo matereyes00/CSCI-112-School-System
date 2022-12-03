@@ -57,4 +57,10 @@ export class QueriesService {
   public TeachersWithCourseInfo() {
     return this.teachersRepository.TeacherWithCourseInfo();
   }
+
+  // I
+  public AwardStudents() {
+    return this.qpiRepository.AwardStudents();
+  }
+
 }

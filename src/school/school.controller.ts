@@ -84,9 +84,15 @@ export class SchoolController {
     return this.queriesService.QPIGreaterThan();
   }
 
-  // F
+  // H
   @Get('query/getInfoOnTeachers')
   async TeachersWithCourseInfo() {
     return this.queriesService.TeachersWithCourseInfo()
+  }
+
+  // I
+  @Get('query/congratsLetter')
+  async AwardStudents() {
+    return this.queriesService.AwardStudents()
   }
 }

@@ -35,4 +35,46 @@ export class QPIRepository extends BaseRepository<QPIMongoModel> {
     ])
     return aggregate;
   }
+
+  async AwardStudents() {
+    const aggregate = await this.qpiModel.aggregate([
+      // 
+      {
+        $group: {
+          _id: '$studentID',
+          avgQPI: { $avg: '$QPI' }
+        }
+      },
+      {
+        $match: { avgQPI: {$gt: 3.5} }
+      },
+      {
+        $lookup: {
+          from: 'students',
+          as: 'studentInfo',
+          foreignField: 'studentID',
+          localField: '_id',
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                studentID: 1,
+                primaryEmail: 1,
+                secondaryEmail: 1,
+                studentName: 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        $addFields: {
+          studentInfo: {
+            $first: '$studentInfo'
+          }
+        }
+      }
+    ])
+    return aggregate;
+  }
 }
