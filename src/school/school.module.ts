@@ -4,6 +4,8 @@ import { LoggerService } from "src/shared/logger.service";
 import { SharedModule } from "src/shared/shared.module";
 import { CourseRepository } from "./collections/courses/course.repository";
 import { CourseSchema } from "./collections/courses/course.schema";
+import { GuardianRepository } from "./collections/guardians/guardian.repository";
+import { GuardianSchema } from "./collections/guardians/guardian.schema";
 import { HoldOrdersRepository } from "./collections/holdOrders/holdOrders.repository";
 import { HoldOrdersSchema } from "./collections/holdOrders/holdOrders.schema";
 import { ParentRepository } from "./collections/parents/parents.repository";
@@ -26,7 +28,8 @@ import { SchoolService } from "./school.service";
       { name: 'HoldOrders', schema: HoldOrdersSchema },
       { name: 'Teacher', schema: TeacherSchema },
       { name: 'Course', schema: CourseSchema },
-      { name: 'QPI', schema: QPISchema }
+      { name: 'QPI', schema: QPISchema },
+      { name: 'Guardian', schema: GuardianSchema }
     ])
   ],
   controllers: [SchoolController],
@@ -38,6 +41,7 @@ import { SchoolService } from "./school.service";
     TeacherRepository,
     CourseRepository,
     QPIRepository,
+    GuardianRepository,
     LoggerService
   ]
 })

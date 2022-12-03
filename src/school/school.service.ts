@@ -12,6 +12,8 @@ import { Course } from "./collections/courses/course.model";
 import { CourseRepository } from "./collections/courses/course.repository";
 import { QPI } from "./collections/qpi/qpi.model";
 import { QPIRepository } from "./collections/qpi/qpi.repository";
+import { Guardian } from "./collections/guardians/guardian.model";
+import { GuardianRepository } from "./collections/guardians/guardian.repository";
 
 @Injectable()
 export class SchoolService {
@@ -21,7 +23,8 @@ export class SchoolService {
     private readonly holdOrdersRepository: HoldOrdersRepository,
     private readonly teachersRepository: TeacherRepository,
     private readonly courseRepository: CourseRepository,
-    private readonly qpiRepository: QPIRepository
+    private readonly qpiRepository: QPIRepository,
+    private readonly guardianRepository: GuardianRepository
   ) {}
 
   public async InsertStudents() {
@@ -269,6 +272,57 @@ export class SchoolService {
       }
     )
     await this.qpiRepository.createMany(allQPIs);
+  }
+
+  public async InsertGuardians() {
+    const lastNameMap: Map<string, StudentMongoModel> = new Map();
+    const students = <StudentMongoModel[]> await this.studentRepository.findAll();
+
+    students.forEach(f => {
+      const split = f.studentName.split(' ');
+      lastNameMap.set(split[1], f);
+    })
+
+    const randomPrefixes = ['0917', '0916', '0927', '0905', '0906', '0915', '0926'];
+    const getRandom = (item: Array<string | boolean>) => {
+      return item[Math.floor(Math.random()*item.length)]
+    }
+    const randomNumber = (length: number) => {
+      return `${getRandom(randomPrefixes)}${Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1))}`;
+    }
+
+    const boyNamesAPI = 'https://names.drycodes.com/1000?nameOptions=boy_names&separator=space';
+    const girlNamesAPI = 'https://names.drycodes.com/1000?nameOptions=girl_names&separator=space';
+    const header = this.Headers();
+    const boyNames = (await axios.get(boyNamesAPI, header)).data;
+    const girlNames = (await axios.get(girlNamesAPI, header)).data;
+    const combinedBoysAndGirls = boyNames.concat(girlNames);
+
+    const guardians: Guardian[] = [];
+
+    let index = 0;
+
+    lastNameMap.forEach((v,k) => {
+      if (index < 200) {
+        const filteredIDs = students.filter(f => f.studentName.includes(k)).map(f => f.studentID);
+        const stringifiedIDs = filteredIDs.map(f => {
+          return f.toString()
+        })
+        const guardianName = <string> getRandom(combinedBoysAndGirls);
+        const splitName = guardianName.split(' ');
+        const guardian: Guardian = {
+          guardianID: index.toString(),
+          studentID: stringifiedIDs,
+          contactNumber: randomNumber(7),
+          email: `${splitName[0]}_${splitName[1]}@gmail.com`,
+          guardianName: guardianName
+        }
+        guardians.push(guardian)
+      }
+      index++
+    })
+
+    await this.guardianRepository.createMany(guardians)
   }
 
   private GetQPIsForStudent(student: {id: number, studentYear: string}) {

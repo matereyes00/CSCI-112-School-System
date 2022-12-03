@@ -9,6 +9,7 @@ export class SchoolController {
     private readonly schoolService: SchoolService
   ) {}
 
+  // ALL INSERTS HERE
   @Post('/insert/students')
   async InsertStudents() {
     await this.schoolService.InsertStudents();
@@ -38,4 +39,12 @@ export class SchoolController {
   async InsertQPIs() {
     await this.schoolService.InsertQPI();
   }
+
+  @Post('insert/guardians')
+  async InsertGuardians() {
+    await this.schoolService.InsertGuardians();
+  }
+
+  // ALL QUERIES START HERE
+
 }
