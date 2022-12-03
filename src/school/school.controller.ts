@@ -1,4 +1,5 @@
-import { Controller, Injectable, Post } from "@nestjs/common";
+import { Controller, Get, Injectable, Param, Post, Query } from "@nestjs/common";
+import { QueriesService } from "./queries.service";
 import { SchoolService } from "./school.service";
 
 @Injectable()
@@ -6,7 +7,8 @@ import { SchoolService } from "./school.service";
 
 export class SchoolController {
   constructor (
-    private readonly schoolService: SchoolService
+    private readonly schoolService: SchoolService,
+    private readonly queriesService: QueriesService
   ) {}
 
   // ALL INSERTS HERE
@@ -46,5 +48,33 @@ export class SchoolController {
   }
 
   // ALL QUERIES START HERE
+  // A
+  @Get('query/averageQPI/:department')
+  async GetAverageQPIByDepartment(@Param('department') department: string) {
+    this.queriesService.GetAverageQPIByDepartment(department)
+  }
 
+  // C
+  @Get('query/holdOrder')
+  async NumberOfStudentsWithHoldOrder() {
+    return this.queriesService.NumberOfStudentsWithHoldOrder()
+  }
+
+  // D
+  @Get('query/heaviestCourse')
+  async MostUnitsTakenAndQuotaCourse() {
+    return this.queriesService.MostUnitsTakenAndQuotaCourse()
+  }
+
+  // E
+  @Get('query/teachers/:department')
+  async TeachingOverAYearByDept(@Param('department') department: string) {
+    return this.queriesService.TeachingOverAYearByDepartment(department)
+  }
+
+  // F
+  @Get('query/mostStudents')
+  async DepartmentWithMostStudents() {
+    return this.queriesService.DepartmentWithMostStudents();
+  }
 }

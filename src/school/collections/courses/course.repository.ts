@@ -15,4 +15,24 @@ export class CourseRepository extends BaseRepository<CourseMongoModel> {
     super(courseModel, log);
   }
   
+  public async MostUnitsTakenAndQuotaCourse() {
+    const aggregate = await this.courseModel.aggregate([
+      {
+        $match: { isQuotaCourse: true }
+      },
+      {
+        $sort: { unitsNeeded: -1 }
+      },
+      {
+        $limit: 5
+      },
+      {
+        $project: {
+          _id: 0,
+          __v: 0
+        }
+      }
+    ])
+    return aggregate;
+  }
 }

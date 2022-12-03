@@ -15,4 +15,23 @@ export class TeacherRepository extends BaseRepository<TeacherMongoModel> {
     super(teacherModel, log);
   }
   
+  public async TeachingOverAYearByDepartment(department: string) {
+    const aggregate = await this.teacherModel.aggregate([
+      {
+       $match: {
+        $and: [
+          { department: department },
+          { monthsEmployed: {$gt: 12} }
+        ]
+       }
+      },
+      {
+        $project: {
+          _id: 0,
+          __v: 0
+        }
+      }
+    ])
+    return aggregate;
+  }
 }

@@ -16,6 +16,7 @@ import { StudentRepository } from "./collections/student/student.repository";
 import { StudentSchema } from "./collections/student/student.schema";
 import { TeacherRepository } from "./collections/teachers/teacher.repository";
 import { TeacherSchema } from "./collections/teachers/teacher.schema";
+import { QueriesService } from "./queries.service";
 import { SchoolController } from "./school.controller";
 import { SchoolService } from "./school.service";
 
@@ -42,7 +43,8 @@ import { SchoolService } from "./school.service";
     CourseRepository,
     QPIRepository,
     GuardianRepository,
-    LoggerService
+    LoggerService,
+    QueriesService
   ]
 })
 export class SchoolModule {}

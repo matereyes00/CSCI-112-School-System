@@ -14,7 +14,7 @@ import { QPI } from "./collections/qpi/qpi.model";
 import { QPIRepository } from "./collections/qpi/qpi.repository";
 
 @Injectable()
-export class SchoolService {
+export class QueriesService {
   constructor(
     private readonly parentRepository: ParentRepository,
     private readonly studentRepository: StudentRepository,
@@ -24,16 +24,26 @@ export class SchoolService {
     private readonly qpiRepository: QPIRepository
   ) {}
 
-  public Test() {
+  public GetAverageQPIByDepartment(department: string) {
     console.log('working')
   }
 
-  private Headers() {
-    return {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept-Encoding': 'application/json',
-      },
-    }
+  // C
+  public NumberOfStudentsWithHoldOrder() {
+    return this.studentRepository.StudentsWithHoldOrder();
+  }
+
+  // D
+  public MostUnitsTakenAndQuotaCourse() {
+    return this.courseRepository.MostUnitsTakenAndQuotaCourse();
+  }
+
+  // E
+  public TeachingOverAYearByDepartment(department: string) {
+    return this.teachersRepository.TeachingOverAYearByDepartment(department);
+  }
+
+  public DepartmentWithMostStudents() {
+    return this.studentRepository.DepartmentWithMostStudents();
   }
 }

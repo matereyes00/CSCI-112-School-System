@@ -15,4 +15,33 @@ export class StudentRepository extends BaseRepository<StudentMongoModel> {
     super(studentModel, log);
   }
   
+  public async StudentsWithHoldOrder() {
+    const aggregate = await this.studentModel.aggregate([ 
+      { 
+        $match : { hasHoldOrder: true } 
+      },
+      {
+        $count: 'Students with hold orders'
+      }
+    ])
+    return aggregate[0];
+  }
+
+  public async DepartmentWithMostStudents() {
+    const aggregate = await this.studentModel.aggregate([
+      {
+        $group: {
+          _id: '$department',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      },
+      {
+        $limit: 1
+      }
+    ])
+    return aggregate[0];
+  }
 }
